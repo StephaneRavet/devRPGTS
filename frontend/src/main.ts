@@ -1,24 +1,72 @@
-import { setupCounter } from './counter.ts'
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
+import { api } from './services/api';
+import './style.css';
+import { Quest, User } from './types';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
+function updateUserInfo(user: User) {
+  document.querySelector('#username')!.textContent = user.username;
+  document.querySelector('#level')!.textContent = user.level.toString();
+  const xpProgress = (user.xp % 100) / 100 * 100;
+  const xpBar = document.querySelector('#xp-bar') as HTMLDivElement;
+  xpBar.style.width = `${xpProgress}%`;
+}
+
+function createQuestElement(quest: Quest) {
+  const questDiv = document.createElement('div');
+  questDiv.className = 'bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-colors';
+  questDiv.innerHTML = `
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 class="font-bold">${quest.name}</h3>
+        <p class="text-sm text-gray-400">XP: ${quest.xp}</p>
+      </div>
+      <button 
+        class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+        data-quest-id="${quest.id}"
+      >
+        Complete
+      </button>
     </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+  `;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+  questDiv.querySelector('button')?.addEventListener('click', async () => {
+    try {
+      const username = localStorage.getItem('username');
+      if (!username) return;
+
+      const updatedUser = await api.completeQuest(username, quest.id!);
+      updateUserInfo(updatedUser);
+      await initializeApp(); // Refresh quests
+    } catch (error) {
+      console.error('Failed to complete quest:', error);
+    }
+  });
+
+  return questDiv;
+}
+
+function renderQuests(quests: Quest[]) {
+  const questsList = document.querySelector('#quests-list')!;
+  questsList.innerHTML = '';
+  quests.forEach(quest => {
+    questsList.appendChild(createQuestElement(quest));
+  });
+}
+
+async function initializeApp() {
+  const username = localStorage.getItem('username') || prompt('Enter your username:');
+  if (!username) return;
+
+  localStorage.setItem('username', username);
+
+  try {
+    const user = await api.getUser(username);
+    const quests = await api.getQuests();
+
+    updateUserInfo(user);
+    renderQuests(quests);
+  } catch (error) {
+    console.error('Failed to initialize app:', error);
+  }
+}
+
+initializeApp();

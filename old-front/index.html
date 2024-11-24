@@ -1,0 +1,115 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevRPG</title>
+  <script type="module" src="./style.css"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+  <header class="bg-gray-800 p-3 shadow-lg">
+    <div class="flex justify-between items-center">
+      <h1 class="text-4xl font-bold text-blue-400">DevRPG</h1>
+      <div id="connection-status" class="text-sm">
+        <span class="online hidden text-green-400">🟢 En ligne</span>
+        <span class="offline hidden text-red-400">🔴 Hors ligne</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6 max-w-4xl">
+
+    <section id="file-manager" class="mb-8">
+      <h2 class="text-xl font-semibold mb-1 text-blue-300">Gestionnaire de fichiers</h2>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+        <div class="flex gap-4">
+          <button id="openFileBtn" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">
+            Ouvrir un fichier
+          </button>
+        </div>
+        <div id="previewContainer" class="hidden mt-4 relative">
+          <button id="closeImageBtn" class="absolute top-2 right-2 text-gray-400 hover:text-gray-200">❌</button>
+          <button id="downloadImageBtn" class="absolute top-2 right-10 text-gray-400 hover:text-gray-200">⬇️</button>
+          <img id="imagePreview" class="max-w-full h-auto rounded-lg mb-4">
+          <div class="flex gap-4 items-center mb-4">
+            <label class="text-gray-300">Qualité:</label>
+            <input type="range" id="qualitySlider" min="0" max="100" value="80" class="w-48">
+            <span id="qualityValue" class="text-gray-300">80%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="mb-8">
+      <h2 class="text-xl font-semibold mb-1 text-blue-300">Tableau de bord</h2>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl hover:bg-gray-750 transition-colors">
+        <p>
+          Personnage :
+          <input type="text" id="username"
+            class="bg-gray-700 text-blue-400 px-3 py-1 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+            placeholder="Développeur anonyme">
+        </p>
+        <p>Niveau : <span class="text-blue-400 font-bold text-lg" id="character-level">1</span></p>
+        <p>Points d'expérience : <span class="text-blue-400 font-bold text-lg" id="character-xp">0</span></p>
+      </div>
+    </section>
+
+    <section id="geo-quests" class="mb-8 hidden">
+      <h2 class="text-xl font-semibold mb-1 text-blue-300">
+        Quêtes géolocalisées
+      </h2>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+        <div id="current-position" class="mb-4">
+          <div id="location-status" class="mb-1">
+            <span class="text-yellow-400">📍 Initialisation...</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-sm">
+            <div class="bg-gray-700 p-2 rounded">
+              <span class="text-gray-400">Latitude:</span>
+              <span id="current-lat" class="text-blue-300">--</span>
+            </div>
+            <div class="bg-gray-700 p-2 rounded">
+              <span class="text-gray-400">Longitude:</span>
+              <span id="current-lng" class="text-blue-300">--</span>
+            </div>
+            <div class="bg-gray-700 p-2 rounded flex justify-between">
+              <span class="text-gray-400">Précision:</span>
+              <span id="current-accuracy" class="text-blue-300">--</span>
+              <span class="text-gray-400">m</span>
+            </div>
+            <div class="bg-gray-700 p-2 rounded col-span-3">
+              <label class="text-gray-400">Rayon de détection:</label>
+              <div class="flex gap-2 items-center">
+                <input type="range" id="detection-radius" min="1" max="1000" value="100"
+                  class="flex-grow appearance-none bg-gray-600 h-2 rounded-lg">
+                <span id="radius-value" class="text-blue-300">100</span>
+                <span class="text-gray-400">km</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ul id="nearby-quests-list" class="space-y-2">
+          <!-- Les quêtes seront ajoutées ici dynamiquement -->
+        </ul>
+      </div>
+    </section>
+
+    <section id="quests" class="mb-8">
+      <h2 class="text-xl font-semibold mb-1 text-blue-300">Quêtes disponibles</h2>
+      <ul class="bg-gray-800 p-6 rounded-lg shadow-xl space-y-3" id="quests-list">
+      </ul>
+    </section>
+
+  </main>
+  <script src="./main.js" type="module"></script>
+  <!-- Toast de notification -->
+  <div id="notification-toast"
+    class="hidden fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg">
+  </div>
+</body>
+
+</html>
