@@ -1,39 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DevRPG - Level Up Your Coding Skills</title>
+  <script type="module" src="./src/style.css"></script>
 </head>
 
-<body class="bg-gray-900 text-white">
-  <div id="app" class="min-h-screen p-8">
-    <div class="max-w-4xl mx-auto">
-      <!-- User Info Section -->
-      <div id="user-info" class="bg-gray-800 rounded-lg p-6 mb-8 shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Developer Profile</h2>
-        <div class="flex items-center gap-4">
-          <div class="flex-1">
-            <p class="text-gray-400">Username: <span id="username" class="text-white"></span></p>
-            <p class="text-gray-400">Level: <span id="level" class="text-white"></span></p>
-            <div class="mt-2 bg-gray-700 rounded-full h-4">
-              <div id="xp-bar" class="bg-blue-500 rounded-full h-4 transition-all duration-500"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+<body class="bg-gray-900 text-white min-h-screen">
+  <header class="bg-gray-800 p-3 shadow-lg">
+    <h1 class="text-4xl font-bold text-blue-400 text-center">DevRPG</h1>
+  </header>
 
-      <!-- Available Quests Section -->
-      <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Available Quests</h2>
-        <div id="quests-list" class="grid gap-4">
-          <!-- Quests will be dynamically inserted here -->
-        </div>
+  <main class="container mx-auto p-6 max-w-4xl">
+    <section id="dashboard" class="mb-8">
+      <h2 class="text-xl font-semibold mb-1 text-blue-300">Tableau de bord</h2>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-xl hover:bg-gray-750 transition-colors">
+        <p>
+          Personnage :
+          <input type="text" id="username"
+            class="bg-gray-700 text-blue-400 px-3 py-1 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+            placeholder="Développeur anonyme">
+        </p>
+        <p>Niveau : <span class="text-blue-400 font-bold text-lg" id="character-level">1</span></p>
+        <p>Points d'expérience : <span class="text-blue-400 font-bold text-lg" id="character-xp">0</span></p>
       </div>
-    </div>
+    </section>
+
+    <section id="quests" class="mb-8">
+      <h2 class="text-xl font-semibold mb-1 text-blue-300">Quêtes disponibles</h2>
+      <ul class="bg-gray-800 p-6 rounded-lg shadow-xl space-y-3" id="quests-list">
+      </ul>
+    </section>
+  </main>
+
+  <div id="notification-toast"
+    class="hidden fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg">
   </div>
+
   <script type="module" src="/src/main.ts"></script>
 </body>
 
