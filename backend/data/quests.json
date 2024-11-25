@@ -1,14 +1,30 @@
 [
-  { "name": "Résoudre un bug CSS", "xp": 10 },
-  { "name": "Apprendre un nouveau framework", "xp": 100 },
-  { "name": "Améliorer une fonctionnalité existante", "xp": 30 },
-  { "name": "Écrire des tests unitaires", "xp": 50 },
-  { "name": "Refactoriser un composant", "xp": 25 },
-  { "name": "Optimiser les requêtes API", "xp": 60 },
-  { "name": "Créer une animation JavaScript", "xp": 40 },
-  { "name": "Corriger une erreur d'accessibilité", "xp": 35 },
-  { "name": "Réaliser une revue de code", "xp": 20 },
-  { "name": "Documenter une fonctionnalité", "xp": 30 },
-  { "name": "Améliorer la vitesse de chargement", "xp": 75 },
-  { "name": "Ajouter une fonctionnalité de recherche", "xp": 80 }
+  { "name": "Résoudre un bug CSS", "xp": 10, "rarity": "common" },
+  {
+    "name": "Apprendre un nouveau framework",
+    "xp": 100,
+    "rarity": "legendary"
+  },
+  {
+    "name": "Améliorer une fonctionnalité existante",
+    "xp": 30,
+    "rarity": "common"
+  },
+  { "name": "Écrire des tests unitaires", "xp": 50, "rarity": "rare" },
+  { "name": "Refactoriser un composant", "xp": 25, "rarity": "common" },
+  { "name": "Optimiser les requêtes API", "xp": 60, "rarity": "epic" },
+  { "name": "Créer une animation JavaScript", "xp": 40, "rarity": "rare" },
+  {
+    "name": "Corriger une erreur d'accessibilité",
+    "xp": 35,
+    "rarity": "common"
+  },
+  { "name": "Réaliser une revue de code", "xp": 20, "rarity": "common" },
+  { "name": "Documenter une fonctionnalité", "xp": 30, "rarity": "common" },
+  { "name": "Améliorer la vitesse de chargement", "xp": 75, "rarity": "epic" },
+  {
+    "name": "Ajouter une fonctionnalité de recherche",
+    "xp": 80,
+    "rarity": "epic"
+  }
 ]

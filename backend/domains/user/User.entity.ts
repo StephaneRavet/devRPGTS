@@ -1,4 +1,4 @@
-import { User } from '@/domains/user/User.interface';
+import { User } from '@shared/User.interface';
 
 export class UserEntity implements User {
   constructor(

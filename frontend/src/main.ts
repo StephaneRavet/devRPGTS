@@ -1,7 +1,8 @@
+import { Quest } from '@shared/Quest.interface';
+import { User } from '@shared/User.interface';
 import $ from 'jquery';
 import { api } from './services/api';
 import './style.css';
-import { Quest, User } from './types';
 
 function updateUserInfo(user: User) {
   $('#username').text(user.username);
@@ -11,12 +12,20 @@ function updateUserInfo(user: User) {
 }
 
 function createQuestElement(quest: Quest) {
+  const rarityColors = {
+    legendary: 'text-yellow-400',
+    epic: 'text-purple-400',
+    rare: 'text-blue-400',
+    common: 'text-gray-400'
+  };
+
   const questDiv = $('<div>')
     .addClass('bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-colors')
     .html(`
       <div class="flex justify-between items-center">
         <div>
           <h3 class="font-bold">${quest.name}</h3>
+          <p class="text-sm ${rarityColors[quest.rarity]}">${quest.rarity}</p>
           <p class="text-sm text-gray-400">XP: ${quest.xp}</p>
         </div>
         <button 
@@ -55,6 +64,7 @@ function renderQuests(quests: Quest[]) {
 async function initializeApp() {
   const username = localStorage.getItem('username') || prompt('Enter your username:');
   if (!username) return;
+  $('#username').val(username);
 
   localStorage.setItem('username', username);
 
@@ -69,6 +79,12 @@ async function initializeApp() {
   }
 }
 
-$(document).ready(() => {
+$(() => {
   initializeApp();
+
+  // Ajout du gestionnaire d'événement pour l'input username
+  $('#username').on('input', function () {
+    const username = $(this).val() as string;
+    localStorage.setItem('username', username);
+  });
 });

@@ -35,6 +35,7 @@ router.post(
       const updatedUser = await userService.addExperience(username, quest.xp);
       res.json(updatedUser);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: (error as Error).message });
     }
   }

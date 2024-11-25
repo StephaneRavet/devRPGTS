@@ -37,8 +37,8 @@ export class DatabaseConnection {
       CREATE TABLE IF NOT EXISTS quests (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        description TEXT,
-        xp INTEGER
+        xp INTEGER,
+        rarity TEXT
       )
     `);
   }
