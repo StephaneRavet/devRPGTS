@@ -7,8 +7,7 @@ import './style.css';
 function updateUserInfo(user: User) {
   $('#username').text(user.username);
   $('#level').text(user.level.toString());
-  const xpProgress = (user.xp % 100) / 100 * 100;
-  $('#xp-bar').css('width', `${xpProgress}%`);
+  $('#xp').text(user.xp.toString());
 }
 
 function createQuestElement(quest: Quest) {
@@ -42,8 +41,7 @@ function createQuestElement(quest: Quest) {
       const username = localStorage.getItem('username');
       if (!username) return;
 
-      const updatedUser = await api.completeQuest(username, quest.id!);
-      updateUserInfo(updatedUser);
+      await api.completeQuest(username, quest.id!);
       await initializeApp(); // Refresh quests
     } catch (error) {
       console.error('Failed to complete quest:', error);
