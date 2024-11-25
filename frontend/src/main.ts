@@ -4,10 +4,58 @@ import $ from 'jquery';
 import { api } from './services/api';
 import './style.css';
 
-function updateUserInfo(user: User) {
-  $('#username').text(user.username);
-  $('#level').text(user.level.toString());
-  $('#xp').text(user.xp.toString());
+// Classe personnalisée pour les erreurs de l'application
+class AppError extends Error {
+  constructor(message: string, public code?: string) {
+    super(message);
+    this.name = 'AppError';
+  }
+}
+
+// Fonction pour afficher les notifications
+function showNotification(message: string, type: 'success' | 'error' = 'success') {
+  const toast = $('#notification-toast');
+  toast
+    .removeClass('hidden bg-green-600 bg-red-600')
+    .addClass(type === 'success' ? 'bg-green-600' : 'bg-red-600')
+    .text(message)
+    .fadeIn();
+
+  setTimeout(() => {
+    toast.fadeOut(() => toast.addClass('hidden'));
+  }, 3000);
+}
+
+async function handleApiError(error: unknown) {
+  console.error('API Error:', error);
+
+  if (error instanceof AppError) {
+    showNotification(error.message, 'error');
+  } else if (error instanceof Error) {
+    showNotification('Une erreur inattendue est survenue', 'error');
+  } else {
+    showNotification('Une erreur inconnue est survenue', 'error');
+  }
+}
+
+async function updateUserInfo(user: User) {
+  try {
+    $('#username').text(user.username);
+    $('#level').text(user.level.toString());
+    $('#xp').text(user.xp.toString());
+  } catch (error) {
+    throw new AppError('Erreur lors de la mise à jour des informations utilisateur');
+  }
+}
+
+async function completeQuest(username: string, questId: number) {
+  try {
+    await api.completeQuest(username, questId);
+    showNotification('Quête complétée avec succès !');
+    await initializeApp();
+  } catch (error) {
+    await handleApiError(error);
+  }
 }
 
 function createQuestElement(quest: Quest) {
@@ -37,15 +85,13 @@ function createQuestElement(quest: Quest) {
     `);
 
   questDiv.find('button').on('click', async () => {
-    try {
-      const username = localStorage.getItem('username');
-      if (!username) return;
-
-      await api.completeQuest(username, quest.id!);
-      await initializeApp(); // Refresh quests
-    } catch (error) {
-      console.error('Failed to complete quest:', error);
+    const username = localStorage.getItem('username');
+    if (!username) {
+      showNotification('Veuillez d\'abord vous connecter', 'error');
+      return;
     }
+
+    await completeQuest(username, quest.id!);
   });
 
   return questDiv;
@@ -60,29 +106,40 @@ function renderQuests(quests: Quest[]) {
 }
 
 async function initializeApp() {
-  const username = localStorage.getItem('username') || prompt('Enter your username:');
-  if (!username) return;
-  $('#username').val(username);
-
-  localStorage.setItem('username', username);
-
   try {
-    const user = await api.getUser(username);
-    const quests = await api.getQuests();
+    const username = localStorage.getItem('username');
+    if (!username) {
+      const newUsername = prompt('Entrez votre nom d\'utilisateur:');
+      if (!newUsername) {
+        throw new AppError('Un nom d\'utilisateur est requis');
+      }
+      localStorage.setItem('username', newUsername);
+    }
 
-    updateUserInfo(user);
+    const [user, quests] = await Promise.all([
+      api.getUser(username),
+      api.getQuests()
+    ]);
+
+    await updateUserInfo(user);
     renderQuests(quests);
   } catch (error) {
-    console.error('Failed to initialize app:', error);
+    await handleApiError(error);
   }
 }
 
 $(() => {
   initializeApp();
 
-  // Ajout du gestionnaire d'événement pour l'input username
   $('#username').on('input', function () {
-    const username = $(this).val() as string;
-    localStorage.setItem('username', username);
+    try {
+      const username = $(this).val() as string;
+      if (!username.trim()) {
+        throw new AppError('Le nom d\'utilisateur ne peut pas être vide');
+      }
+      localStorage.setItem('username', username);
+    } catch (error) {
+      handleApiError(error);
+    }
   });
 });
