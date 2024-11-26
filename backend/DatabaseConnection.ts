@@ -3,7 +3,7 @@ import sqlite3 from 'sqlite3';
 
 interface DatabaseConfig {
   filename: string;
-  driver: any;
+  driver: typeof sqlite3.Database;
 }
 
 export class DatabaseConnection {
