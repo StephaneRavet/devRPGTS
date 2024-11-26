@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker/locale/fr';
 import { Quest } from '@shared/Quest.interface';
 import { User } from '@shared/User.interface';
 import $ from 'jquery';
@@ -52,7 +53,7 @@ async function completeQuest(username: string, questId: number) {
   try {
     await api.completeQuest(username, questId);
     showNotification('Quête complétée avec succès !');
-    await initializeApp();
+    await loadUserDashboard(username);
   } catch (error) {
     await handleApiError(error);
   }
@@ -85,7 +86,7 @@ function createQuestElement(quest: Quest) {
     `);
 
   questDiv.find('button').on('click', async () => {
-    const username = localStorage.getItem('username');
+    const username = $('#username').val() as string;
     if (!username) {
       showNotification('Veuillez d\'abord vous connecter', 'error');
       return;
@@ -105,16 +106,8 @@ function renderQuests(quests: Quest[]) {
   });
 }
 
-async function initializeApp() {
+async function loadUserDashboard(username: string) {
   try {
-    const username = localStorage.getItem('username');
-    if (!username) {
-      const newUsername = prompt('Entrez votre nom d\'utilisateur:');
-      if (!newUsername) {
-        throw new AppError('Un nom d\'utilisateur est requis');
-      }
-      localStorage.setItem('username', newUsername);
-    }
 
     const [user, quests] = await Promise.all([
       api.getUser(username),
@@ -129,17 +122,7 @@ async function initializeApp() {
 }
 
 $(() => {
-  initializeApp();
-
-  $('#username').on('input', function () {
-    try {
-      const username = $(this).val() as string;
-      if (!username.trim()) {
-        throw new AppError('Le nom d\'utilisateur ne peut pas être vide');
-      }
-      localStorage.setItem('username', username);
-    } catch (error) {
-      handleApiError(error);
-    }
-  });
+  const username = faker.internet.username();
+  $('#username').val(username);
+  loadUserDashboard(username);
 });
